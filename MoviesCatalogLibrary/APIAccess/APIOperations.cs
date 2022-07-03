@@ -1,5 +1,6 @@
 ﻿using JsonSerializer = System.Text.Json.JsonSerializer;
 using Newtonsoft.Json.Linq;
+using MoviesCatalogLibrary.Validation;
 
 namespace MoviesCatalogLibrary.APIAccess
 {
@@ -20,6 +21,9 @@ namespace MoviesCatalogLibrary.APIAccess
         {
             var json = await GetResultFromAPI(url);
 
+            if (json == Stream.Null)
+                throw new Exception();
+
             var result = await JsonSerializer.DeserializeAsync<T>(json);
 
             return result;
@@ -35,20 +39,20 @@ namespace MoviesCatalogLibrary.APIAccess
                 //Read the Response
                 var response = await client.SendAsync(request);
 
-                if (response.IsSuccessStatusCode == true)
+                if (await UserInputValidation.CheckForSearchResults(apiUrl, response, client) == true)
                 {
                     var content = await response.Content.ReadAsStreamAsync();
 
                     return content;
                 }
-
-                throw new Exception();
             }
 
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+
             }
+
+            return Stream.Null;
         }
 
         public async Task<T> GetRequestedSerach<T>(string apiUrl)
@@ -61,8 +65,6 @@ namespace MoviesCatalogLibrary.APIAccess
             JObject converter = JObject.Parse(jsonString);
 
             var result = converter["Search"][0].ToObject<T>();
-
-            //var results = JsonConvert.DeserializeObject<T[]>(jsonString);
 
             return result;
         }
@@ -77,20 +79,20 @@ namespace MoviesCatalogLibrary.APIAccess
                 //Read the Response
                 var response = await client.SendAsync(request);
 
-                if (response.IsSuccessStatusCode == true)
+                if(await UserInputValidation.CheckForSearchResults(apiUrl, response, client) == true)
                 {
                     var content = await response.Content.ReadAsStringAsync();
 
                     return content;
                 }
-
-                throw new Exception();
             }
 
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                
             }
+
+            return "Movie Not Found!";
         }
 
         public string GetRequestedApiUrl(string choice, string value)

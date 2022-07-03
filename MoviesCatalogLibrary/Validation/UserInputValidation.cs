@@ -17,5 +17,27 @@ namespace MoviesCatalogLibrary.Validation
 
             return true;
         }
+
+        public static async Task<bool> CheckForSearchResults(string apiUrl, HttpResponseMessage message, HttpClient client)
+        {
+            //url can be the title or ImdbId or a searched value
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+
+                //Read the Response
+                var response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode == true)
+                    return true;
+            }
+
+            catch
+            {
+                
+            }
+
+            return false;
+        }
     }
 }
