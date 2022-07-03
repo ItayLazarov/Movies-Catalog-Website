@@ -1,0 +1,51 @@
+﻿@using MoviesCatalogLibrary.Models
+@model MovieDetails
+
+@{
+    ViewData["Title"] = $"{Model.Title} Details";
+}
+
+
+<div class="align-content-md-between">
+    <h2>@Model.Title</h2>
+    <h3>Rated:<br />@Model.Rated</h3>
+    <img src="@Model.Poster" width="200" height="300" />
+    <p><strong>Plot:<br />@Model.Plot</strong></p>
+    <p>Year:<br />@Model.Year</p>
+    <p>Released:<br />@Model.Released</p>
+    <p>RunTime:<br />@Model.Runtime</p>
+    <p>Director:<br />@Model.Director</p>
+    <p>Writer/s:<br />@Model.Writer</p>
+    <p>Language/s:<br />@Model.Language</p>
+    <p>Production Company:<br />@Model.Production</p>
+    <p>Cast:<br />@Model.Actors</p>
+    <p>Awards:<br />@Model.Awards</p>
+    <p>Country:<br />@Model.Country</p>
+    <p>Genre:<br />@Model.Genre</p>
+    <p>MetaScore:<br />@Model.Metascore</p>
+    <p>BoxOffice:<br />@Model.BoxOffice</p>
+    <p>@Model.DVD</p>
+    <p>@Model.imdbID</p>
+    <p>IMDB Rating:<br />@Model.imdbRating</p>
+    <p>IMDB Votes:<br />@Model.imdbVotes</p>
+    <p>@Model.Type</p>
+    <table border="1">
+        <tr>
+            <th>Source</th>
+            <th>Rating</th>
+        </tr>
+        @for (int i = 0; i < @Model.Ratings.Length; i++)
+        {
+            <tr>
+                <td>@Model.Ratings[i].Source</td>
+                <td>@Model.Ratings[i].Value</td>
+            </tr>
+        }
+    </table>
+
+    <br />
+    <br />
+
+    <a href="https://localhost:44380/Home/MoviesIndex">back to Movies Catalog</a>
+</div>
+
